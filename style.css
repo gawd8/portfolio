@@ -1,6 +1,7 @@
 html {
     --color-accent: oklch(65% 50% 0);
     accent-color: var(--color-accent);
+    color-scheme: light dark;
 }
 
 body {
@@ -13,11 +14,15 @@ body {
     box-sizing: border-box;
 }
 
+
 nav {
+    --border-color: oklch(50% 10% 200 / 40%);
+
     display: flex;
     margin-bottom: 1em;
-    border-bottom: 1px solid oklch(80% 3% 200);
+    border-bottom: 1px solid var(--border-color);
 }
+
 
 nav a {
     flex: 1;
@@ -122,4 +127,25 @@ h1, h2, h3, h4, h5, h6 {
     width: 300px;
     max-width: 100%;
     height: auto;
+}
+
+
+.color-scheme {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 80%;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+select {
+    font: inherit;
+}
+
+
+/* Make room for the theme dropdown */
+body {
+    padding-top: 3rem;
 }
