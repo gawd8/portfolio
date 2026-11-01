@@ -149,3 +149,65 @@ select {
 body {
     padding-top: 3rem;
 }
+
+#projects-pie-plot {
+  max-width: 20em;
+  margin-block: 2em;
+  overflow: visible;
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 1em;
+  padding: 1em;
+  border: 1px solid #ccc;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.legend .swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  aspect-ratio: 1;
+  background-color: var(--color);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.chart-container {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  flex-wrap: wrap;
+}
+
+.chart-container .legend {
+  flex: 1;
+}
+
+#projects-pie-plot path {
+  transition: opacity 300ms;
+}
+
+#projects-pie-plot:has(path:hover) path:not(:hover) {
+  opacity: 0.5;
+}
+
+#projects-pie-plot path {
+  cursor: pointer;
+}
+
+#projects-pie-plot path.selected {
+  fill: oklch(60% 45% 0);
+}
+
+.legend li.selected {
+  --color: oklch(60% 45% 0) !important;
+}
