@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Explore changes in life expectancy across 142 countries from 1952 to 2007 using an interactive D3 world map." />
+  <title>Global Life Expectancy Explorer · DSC 209R</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="#top" class="brand"><span class="brand-symbol" aria-hidden="true">◉</span> Atlas of Longevity</a>
+    <span class="course-label">DSC 209R · PROJECT 3</span>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div class="eyebrow">
+        <span class="eyebrow-line"></span>
+        A GLOBAL HEALTH DATA STORY
+        <span class="eyebrow-line"></span>
+      </div>
+      <h1>How long do we live,<br /><em>and how has that changed?</em></h1>
+      <p class="intro">Explore six decades of life expectancy across 142 countries. Move through time, discover geographic patterns, and compare the trajectories behind the map.</p>
+      <div class="hero-facts">
+        <span><strong>142</strong> countries</span><span class="dot">·</span>
+        <span><strong>12</strong> snapshots</span><span class="dot">·</span>
+        <span><strong>1952–2007</strong> years</span>
+      </div>
+    </section>
+
+    <!-- 01: Linked map + trend chart -->
+    <section class="workspace wrap" aria-labelledby="explore-title">
+      <div class="section-top">
+        <div>
+          <div class="section-kicker">01 / EXPLORE THE WORLD</div>
+          <h2 id="explore-title">A changing world</h2>
+          <p class="section-subtitle">Choose a year or continent, then click a country on the map to explore its life expectancy over time.</p>
+        </div>
+        <button id="reset-btn" class="button button-light" type="button">↺ Reset view</button>
+      </div>
+
+      <div class="controls">
+        <div class="year-control">
+          <div class="control-head">
+            <label for="year-slider">YEAR</label>
+            <output id="year-output" for="year-slider">2007</output>
+          </div>
+          <div class="year-input-row">
+            <button id="play-btn" class="play-btn" type="button" aria-label="Play through years" title="Play through years">▶</button>
+            <input id="year-slider" type="range" min="0" max="11" step="1" value="11" aria-label="Year" />
+          </div>
+          <div class="slider-ends"><span>1952</span><span>2007</span></div>
+        </div>
+        <div class="filter-control">
+          <label for="continent-select">CONTINENT</label>
+          <select id="continent-select">
+            <option value="All">All continents</option>
+            <option value="Africa">Africa</option>
+            <option value="Americas">Americas</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="Oceania">Oceania</option>
+          </select>
+        </div>
+        <div class="filter-control">
+          <label for="country-search">FIND A COUNTRY</label>
+          <div class="search-wrap">
+            <input id="country-search" type="search" list="country-options" placeholder="Search countries..." autocomplete="off" />
+            <datalist id="country-options"></datalist>
+          </div>
+        </div>
+      </div>
+
+      <div class="linked-views">
+        <div class="map-card">
+          <div class="map-meta">
+            <div>
+              <span class="metric-label">MEDIAN COUNTRY LIFE EXPECTANCY</span>
+              <div class="metric-number"><span id="median-value">—</span><small>years</small></div>
+            </div>
+            <div>
+              <span class="metric-label">GAP BETWEEN HIGHEST &amp; LOWEST</span>
+              <div class="metric-number"><span id="gap-value">—</span><small>years</small></div>
+            </div>
+            <div class="map-caption" id="map-summary">Data for 142 countries · 2007</div>
+          </div>
+          <div class="map-container">
+            <svg id="world-map" role="img" aria-label="Interactive world choropleth showing country life expectancy for the selected year"></svg>
+            <div id="map-tooltip" class="tooltip" role="status" aria-live="polite" hidden></div>
+          </div>
+          <div class="map-bottom">
+            <div class="legend">
+              <span>Life expectancy</span>
+              <div class="legend-gradient" aria-hidden="true"></div>
+              <div class="legend-labels"><span>30 years</span><span>55</span><span>80+ years</span></div>
+            </div>
+            <p><span class="nodata-swatch"></span> Gray = no Gapminder data · Hover for values · Click to compare</p>
+          </div>
+        </div>
+
+        <div class="trend-panel">
+          <div class="trend-heading">
+            <div class="section-kicker">COUNTRY JOURNEYS</div>
+            <h3 id="compare-title">Life expectancy over time</h3>
+            <p class="section-subtitle">Click a country to compare up to three trajectories. The marker follows your selected year.</p>
+            <button class="button button-light" id="clear-btn" type="button">Clear selections</button>
+          </div>
+          <div class="chart-card">
+            <div id="selection-chips" class="chips" aria-live="polite"></div>
+            <div id="line-chart" class="chart-frame">
+              <svg id="trend-chart" role="img" aria-label="Line chart comparing life expectancy over time for selected countries"></svg>
+              <div id="chart-tooltip" class="tooltip chart-tooltip" hidden></div>
+            </div>
+            <p class="chart-footnote">Life expectancy at birth, in years. Observations are recorded every five years. Select a country on the map to update this chart.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02: Regional comparison -->
+    <section class="insights wrap" aria-labelledby="regional-title">
+      <div class="section-top">
+        <div>
+          <div class="section-kicker">02 / LOOK CLOSER</div>
+          <h2 id="regional-title">Regional differences</h2>
+          <p class="section-subtitle">Compare mean country life expectancy by continent in <strong id="region-year">2007</strong>. This is an unweighted average of countries, not a population-weighted estimate.</p>
+        </div>
+      </div>
+      <div class="regional-card">
+        <svg id="region-chart" role="img" aria-label="Horizontal bar chart of unweighted mean country life expectancy by continent"></svg>
+        <p id="regional-insight" class="insight-note"></p>
+      </div>
+    </section>
+
+    <!-- 03: Methodology and limitations -->
+    <section class="about wrap" aria-labelledby="about-title">
+      <div class="section-kicker">03 / BEHIND THE VISUALIZATION</div>
+      <h2 id="about-title">What the data can—and can't—tell us</h2>
+      <div class="about-grid">
+        <div>
+          <h3>Why this view?</h3>
+          <p>Life expectancy at birth is one window into population health. A choropleth reveals geographic patterns, while linked country trajectories show that a single snapshot can hide how much—or how little—a country has changed.</p>
+        </div>
+        <div>
+          <h3>How to read it</h3>
+          <p>The map uses a sequential color scale: lighter colors mean lower life expectancy and darker colors mean higher. Gray countries have no matched observation in this dataset. A constant scale across years makes changes comparable.</p>
+        </div>
+        <div>
+          <h3>How values are calculated</h3>
+          <p>The year control selects one of the 12 five-year observations, from 1952 through 2007. Country values are displayed without interpolation; the median and range use the countries included in the current continent filter. Regional bars show arithmetic means of country values.</p>
+        </div>
+        <div>
+          <h3>Important limitations</h3>
+          <p>Gapminder covers 142 countries and ends in 2007, so these are <strong>historical</strong> patterns, not current estimates. Continental means give each represented country equal weight. Geographic area does not represent population, and differences do not by themselves establish causation.</p>
+        </div>
+      </div>
+      <div class="process">
+        
+      <h3>Development process</h3>
+      <p>
+        The checkpoint explored country trends, regional means,
+        distributions, extremes, and a static world map. The final
+        visualization brings these explorations together through
+        linked geographic and temporal views.
+      </p>
+
+      <hr class="process-divider">
+
+      <h3>Interaction design</h3>
+      <p>
+        The year slider updates the map and summary statistics.
+        Selecting a continent filters the map and highlights the
+        regional chart while automatically comparing countries
+        with the highest, middle-ranked, and lowest life
+        expectancy in 2007. These countries remain fixed as the
+        year changes. Users can customize the comparison by
+        clicking countries on the map.
+      </p>
+
+  
+      </div>
+      <p class="source"><strong>Source:</strong> Gapminder dataset distributed with Plotly Express (1952–2007; 1,704 country-year observations). Geographic boundaries: Natural Earth low-resolution dataset. Implementation: D3.js v7, HTML, CSS, JavaScript. <a href="https://www.gapminder.org/data/" target="_blank" rel="noopener noreferrer">Gapminder data ↗</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <span>GLOBAL LIFE EXPECTANCY EXPLORER</span>
+    <span>DSC 209R · PROJECT 3 · 2026</span>
+  </footer>
+  <div class="error-banner" id="error-banner" hidden></div>
+</body>
+</html>
