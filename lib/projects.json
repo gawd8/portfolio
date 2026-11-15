@@ -1,7 +1,7 @@
 ﻿[
     {
         "title": "Bikewatching",
-        "image": "../images/bikewatching.png",
+        "image": "https://gawd8.github.io/portfolio/images/bikewatching.png",
         "description": "Interactive visualization of Boston bike traffic using Mapbox and D3, featuring time-based filtering, station traffic volumes, and arrival/departure patterns.",
         "year": 2026,
         "url": "https://gawd8.github.io/bikewatching/"
