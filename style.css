@@ -306,3 +306,31 @@ dl.info[hidden]:not(:hover, :focus-within) {
 circle.selected {
   fill: #ff6b6b;
 }
+
+.projects article {
+  min-width: 0;
+}
+
+.projects article img {
+  width: 100%;
+  max-width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+.projects article p {
+  overflow-wrap: anywhere;
+}
+
+.projects article h2 a,
+.projects article h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.projects article h2 a:hover,
+.projects article h3 a:hover {
+  text-decoration: underline;
+}
